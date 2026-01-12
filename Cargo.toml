@@ -1,26 +1,26 @@
 [package]
 name = "fioapi"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
-authors = ["wagnelib"]
+authors = ["Libor Wagner"]
 license = "MIT"
 description = "Async Rust client for the Fio banka REST API"
-homepage = "https://github.com/wagnelib/fioapi"
-repository = "https://github.com/wagnelib/fioapi"
+homepage = "https://github.com/wagnelib/fioapi-rs"
+repository = "https://github.com/wagnelib/fioapi-rs"
 readme = "README.md"
 keywords = ["fio", "banking", "api", "finance", "client"]
 categories = ["api-bindings", "network-programming"]
-rust-version = "1.85"
+rust-version = "1.92"
 
 [dependencies]
-reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-thiserror = "1.0"
-chrono = { version = "0.4", features = ["serde"] }
-rust_decimal = { version = "1.34", features = ["serde"] }
-tokio = { version = "1.43", features = ["macros", "rt-multi-thread"] }
-dotenvy = "0.15"
-log = "0.4"
-env_logger = "0.11"
-clap = { version = "4.5", features = ["derive", "env"] }
+reqwest = { version = "0.13.1", features = ["json"] }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+thiserror = "2.0.17"
+chrono = { version = "0.4.42", features = ["serde"] }
+rust_decimal = { version = "1.39", features = ["serde"] }
+tokio = { version = "1.49", features = ["macros", "rt-multi-thread"] }
+dotenvy = "0.15.7"
+log = "0.4.29"
+env_logger = "0.11.8"
+clap = { version = "4.5.54", features = ["derive", "env"] }
