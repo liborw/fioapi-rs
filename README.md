@@ -47,4 +47,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 - Format and lint: `cargo fmt`, `cargo clippy --all-targets --all-features`
 - Tests: `cargo test`
 
-Keep secrets (API tokens) out of VCS; pass them via env vars or `.env`. Default base URL is `https://fioapi.fio.cz/v1/rest`; override with `Client::with_base_url` for testing.***
+Keep secrets (API tokens) out of VCS; pass them via env vars or `.env`. Default base URL is `https://fioapi.fio.cz/v1/rest`; override with `Client::with_base_url` for testing.
+
+## License
+MIT
