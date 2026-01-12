@@ -123,8 +123,8 @@ impl From<StatementFmt> for AccountStatementFmt {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    env_logger::init();
     dotenvy::dotenv().ok();
+    env_logger::init();
 
     let cli = Cli::parse();
     let client = Client::new(cli.token)?;
