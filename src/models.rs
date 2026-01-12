@@ -37,7 +37,7 @@ pub struct AccountInfo {
 
 #[derive(Debug, Clone)]
 pub struct Transaction {
-    pub transaction_id: String,
+    pub transaction_id: i64,
     pub date: NaiveDate,
     pub amount: Decimal,
     pub currency: String,
@@ -45,9 +45,9 @@ pub struct Transaction {
     pub account_name: Option<String>,
     pub bank_id: Option<String>,
     pub bank_name: Option<String>,
-    pub ks: Option<String>,
-    pub vs: Option<String>,
-    pub ss: Option<String>,
+    pub ks: Option<i64>,
+    pub vs: Option<i64>,
+    pub ss: Option<i64>,
     pub user_identification: Option<String>,
     pub remittance_info: Option<String>,
     pub transaction_type: Option<String>,
@@ -196,8 +196,16 @@ fn optional_string(value: &Option<ColumnValue<Value>>) -> Option<String> {
         .filter(|s| !s.is_empty())
 }
 
+fn parse_i64_value(value: &Value) -> Option<i64> {
+    match value {
+        Value::Number(n) => n.as_i64(),
+        Value::String(s) => s.parse().ok(),
+        _ => None,
+    }
+}
+
 fn optional_i64(value: &Option<ColumnValue<Value>>) -> Option<i64> {
-    value.as_ref().and_then(|c| c.value.as_i64())
+    value.as_ref().and_then(|c| parse_i64_value(&c.value))
 }
 
 impl TryFrom<&RawTransaction> for Transaction {
@@ -205,7 +213,7 @@ impl TryFrom<&RawTransaction> for Transaction {
 
     fn try_from(raw: &RawTransaction) -> Result<Self, Self::Error> {
         let transaction_id =
-            json_value_to_string(&raw.transaction_id.value).ok_or(FioError::InvalidResponse)?;
+            parse_i64_value(&raw.transaction_id.value).ok_or(FioError::InvalidResponse)?;
         let date = parse_date(&raw.date.value).ok_or(FioError::InvalidResponse)?;
 
         Ok(Transaction {
@@ -217,9 +225,9 @@ impl TryFrom<&RawTransaction> for Transaction {
             account_name: optional_string(&raw.account_name),
             bank_id: optional_string(&raw.bank_id),
             bank_name: optional_string(&raw.bank_name),
-            ks: optional_string(&raw.ks),
-            vs: optional_string(&raw.vs),
-            ss: optional_string(&raw.ss),
+            ks: optional_i64(&raw.ks),
+            vs: optional_i64(&raw.vs),
+            ss: optional_i64(&raw.ss),
             user_identification: optional_string(&raw.user_identification),
             remittance_info: optional_string(&raw.remittance_info),
             transaction_type: optional_string(&raw.transaction_type),
@@ -317,10 +325,10 @@ mod tests {
         let txns = parse_transactions(&json).expect("transactions should parse");
         assert_eq!(txns.len(), 1);
         let txn = &txns[0];
-        assert_eq!(txn.transaction_id, "10001");
+        assert_eq!(txn.transaction_id, 10001);
         assert_eq!(txn.amount, Decimal::from_str("50.25").unwrap());
         assert_eq!(txn.date, NaiveDate::from_ymd_opt(2023, 1, 2).unwrap());
-        assert_eq!(txn.vs.as_deref(), Some("12345"));
+        assert_eq!(txn.vs, Some(12345));
         assert_eq!(txn.order_id, Some(77));
     }
 }
