@@ -2,6 +2,15 @@
 name = "fioapi"
 version = "0.1.0"
 edition = "2024"
+authors = ["wagnelib"]
+license = "MIT"
+description = "Async Rust client for the Fio banka REST API"
+homepage = "https://github.com/wagnelib/fioapi"
+repository = "https://github.com/wagnelib/fioapi"
+readme = "README.md"
+keywords = ["fio", "banking", "api", "finance", "client"]
+categories = ["api-bindings", "network-programming"]
+rust-version = "1.85"
 
 [dependencies]
 reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
