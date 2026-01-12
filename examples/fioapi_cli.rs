@@ -1,4 +1,4 @@
-use chrono::NaiveDate;
+use chrono::{NaiveDate, Utc};
 use clap::{Parser, Subcommand, ValueEnum};
 use fioapi::{AccountStatementFmt, Client, LastStatementInfo, StatementData, TransactionReportFmt};
 use std::error::Error;
@@ -23,9 +23,9 @@ enum Commands {
         /// Start date YYYY-MM-DD
         #[arg(long, value_parser = parse_date)]
         start: NaiveDate,
-        /// End date YYYY-MM-DD
+        /// End date YYYY-MM-DD (defaults to today if omitted)
         #[arg(long, value_parser = parse_date)]
-        end: NaiveDate,
+        end: Option<NaiveDate>,
         /// Output format
         #[arg(long, value_enum, default_value = "json")]
         format: TxnFmt,
@@ -131,6 +131,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     match cli.command {
         Commands::FetchPeriod { start, end, format } => {
+            let end = end.unwrap_or_else(|| Utc::now().date_naive());
             let fmt = format.into();
             let payload = client
                 .fetch_transaction_report_for_period(start, end, fmt)
